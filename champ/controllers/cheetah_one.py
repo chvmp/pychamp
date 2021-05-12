@@ -43,7 +43,7 @@ class CheetahOne(object):
                                                   self._gait_config.stance_duration,
                                                   self._center_to_nominal)
         
-        #using the calculataed translations and rotations,
+        #using the calculated translations and rotations,
         #we can project virtual foot positions from ref foot positions
         projected_foot = project_foot(self._zero_stances, #reference foot
                                       step_x, #translation in X axis
