@@ -25,7 +25,9 @@ class Champ:
         #change to the robot you want to use ie.
         #robot_profile = spot
         #robot_profile = anymal_b
-        robot_profile = anymal_c
+        # robot_profile = anymal_c
+        robot_profile = open_quadruped
+
         quadruped = Base(robot_profile)
         controller = CheetahOne(quadruped, robot_profile.gait_config)
         ik = Kinematics(quadruped, robot_profile.gait_config.knee_orientation)
@@ -40,19 +42,19 @@ class Champ:
                 joint_names.append(joint)
 
         #source https://docs.google.com/document/d/10sXEhzFRSnvFcl3XxNGhnD4N2SedqwdAvK3dsihxVUA/edit#heading=h.2ye70wns7io3
-        physicsClient = p.connect(p.GUI)#or p.DIRECT for non-graphical version
+        physics_client = p.connect(p.GUI)#or p.DIRECT for non-graphical version
         p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
         p.setGravity(0,0,-10)
-        planeId = p.loadURDF("plane.urdf")
-        champStartPos = [0,0, 1.0]
-        champStartOrientation = p.getQuaternionFromEuler([0,0,0])
-        champ = p.loadURDF(robot_profile.urdf, champStartPos, champStartOrientation)
-        numJoints = p.getNumJoints(champ)
+        plane_id = p.loadURDF("plane.urdf")
+        chamo_start_pos = [0,0, 1.0]
+        champ_start_orientation = p.getQuaternionFromEuler([0,0,0])
+        champ = p.loadURDF(robot_profile.urdf, chamo_start_pos, champ_start_orientation)
+        num_joints = p.getNumJoints(champ)
         
         bullet_joint_indices = [0] * 12
 
         #iterate all joints in the URDF
-        for j_idx in range(numJoints):
+        for j_idx in range(num_joints):
             joint_info= p.getJointInfo(champ, j_idx)
             joint_name = joint_info[1]
             joint_name = joint_name.decode("utf-8")
