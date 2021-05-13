@@ -98,7 +98,7 @@ class JointVector:
         return self._translation
 
     @property 
-    def position(self, from_base=False):
+    def position(self):
         position = np.zeros((4,3))
         for i in range(self._id, -1, -1):
             position = translate(position, self._parent.joints[i].translation)
