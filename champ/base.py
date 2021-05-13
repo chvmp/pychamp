@@ -21,10 +21,10 @@ class Base(object):
         self.lower_legs = JointVector(self, 2)
         self.feet = JointVector(self, 3)
 
-        self._joint_vector = [self.hips, 
-                              self.upper_legs,
-                              self.lower_legs,
-                              self.feet]
+        self.joints = [self.hips, 
+                       self.upper_legs,
+                       self.lower_legs,
+                       self.feet]
 
         self._leg_zero_stances = np.zeros((4,3))
         self._leg_zero_stances_vectorized = False
@@ -52,7 +52,7 @@ class Base(object):
 
     @joint_positions.setter
     def joint_positions(self, joint_positions):
-        self._joint_positions = joint_positions
+        self._joint_positions = np.array((joint_positions))
         self.hips.theta = self._joint_positions[0::3, np.newaxis]
         self.upper_legs.theta = self._joint_positions[1::3, np.newaxis]
         self.lower_legs.theta = self._joint_positions[2::3, np.newaxis]
@@ -78,14 +78,13 @@ class Base(object):
         return self._leg_zero_stances
 
     def transform_to_hip(self, foot_positions):
-        foot_positions[:, 0] -= self.hips.translation[:, 0]
-        foot_positions[:, 1] -= self.hips.translation[:, 1]
-
+        foot_positions -= self.hips.translation
+        foot_positions = rotate_x(foot_positions, -self.hips.theta)
         return foot_positions
     
     def transform_to_base(self, foot_positions):
-        foot_positions = translate(foot_positions, self.hips.translation)
         foot_positions = rotate_x(foot_positions, self.hips.theta)
+        foot_positions = translate(foot_positions, self.hips.translation)
 
         return foot_positions
 
