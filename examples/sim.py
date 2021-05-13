@@ -1,3 +1,4 @@
+import sys
 import pybullet as p
 import numpy as np
 
@@ -23,8 +24,8 @@ from champ.robots.profile import StochLite as stochlite
 class Champ:
     def __init__(self):
         #change to the robot you want to use ie.
-        #robot_profile = spot
-        #robot_profile = anymal_b
+        # robot_profile = spot
+        # robot_profile = anymal_b
         # robot_profile = anymal_c
         robot_profile = open_quadruped
 
@@ -46,9 +47,9 @@ class Champ:
         p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
         p.setGravity(0,0,-10)
         plane_id = p.loadURDF("plane.urdf")
-        chamo_start_pos = [0,0, 1.0]
+        champ_start_pos = [0,0, 1.0]
         champ_start_orientation = p.getQuaternionFromEuler([0,0,0])
-        champ = p.loadURDF(robot_profile.urdf, chamo_start_pos, champ_start_orientation)
+        champ = p.loadURDF(robot_profile.urdf, champ_start_pos, champ_start_orientation)
         num_joints = p.getNumJoints(champ)
         
         bullet_joint_indices = [0] * 12
@@ -104,10 +105,18 @@ class Champ:
                 req_pose.orientation.yaw = yaw_gen.sine()
 
             foot_positions = controller.walk(req_pose, req_vel)
-            joint_positions = ik.inverse(foot_positions)
+            target_joint_positions = ik.inverse(foot_positions)
 
-            p.setJointMotorControlArray(champ, bullet_joint_indices, p.POSITION_CONTROL, list(joint_positions))
+            joint_positions = [0.0] * 12
+
+            joint_states = p.getJointStates(champ, bullet_joint_indices)
+            for i, joint_info in enumerate(joint_states):
+                position = joint_info[0]
+                joint_positions[i] = position
+
+            p.setJointMotorControlArray(champ, bullet_joint_indices, p.POSITION_CONTROL, list(target_joint_positions))
             p.stepSimulation()
+            
         p.disconnect()
 
 if __name__ == '__main__':
