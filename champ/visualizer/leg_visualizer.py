@@ -4,7 +4,7 @@ import numpy as np
 matplotlib.use('TkAgg')
 
 class LegVisualizer:
-    def __init__(self, base, x_min=-0.2, x_max=0.2, y_min=-0.25, y_max=0.1, add_directional_count=False, latch_buffer_size=100):
+    def __init__(self, base, x_min=-0.2, x_max=0.2, y_min=-0.25, y_max=0.1, latch_buffer_size=100):
         self._latch_buffer_size = latch_buffer_size
         self._base = base
         self._fig, self._ax = plt.subplots(1,3, figsize=(12, 5))
@@ -41,6 +41,7 @@ class LegVisualizer:
         self._fig.canvas.blit(self._fig.bbox)
 
     def plot_legs(self, id=0, latch=100):
+
         if latch > self._latch_buffer_size:
             latch = self._latch_buffer_size
 
@@ -51,11 +52,12 @@ class LegVisualizer:
         self._fig.canvas.flush_events()
 
         legs = np.empty((0,3))
-        legs = np.append(legs, self._base.legs[id].upper_leg_from_hip, axis=0)
-        legs = np.append(legs, self._base.legs[id].lower_leg_from_hip, axis=0)
-        legs = np.append(legs, self._base.legs[id].foot_from_hip, axis=0)
-        views = ['side', 'front', 'top']
+        for i in range(1, 4):
+            leg_pos = self._base.legs[id].joints[i].position
+            leg_pos = self._base.legs[id].transform_to_hip(leg_pos)
+            legs = np.append(legs, leg_pos, axis=0)
 
+        views = ['side', 'front', 'top']
         for i in range(3):
             to_render = []
             x_idx, y_idx = self.__view_to_ids(views[i])
