@@ -6,7 +6,6 @@ from champ.types import Pose, GaitConfig, Velocities
 from champ.base import Base
 from champ.controllers.cheetah_one import CheetahOne
 from champ.kinematics import Kinematics
-from champ.visualizer.visualizer import Visualizer
 from champ.visualizer.leg_visualizer import LegVisualizer
 
 gait_config = GaitConfig()
@@ -54,7 +53,6 @@ req_pose.position.z = gait_config.nominal_height
 req_vel = Velocities()
 req_vel.linear.x = 1.0
 req_vel.linear.y = 1.0
-# req_vel.angular.z = 1.0
 
 average_duration = 0
 iterations = 5000
@@ -67,14 +65,7 @@ for i in range(iterations):
     quadruped.joint_positions = joint_positions
     upper_leg = quadruped.upper_legs.position
     lower_leg = quadruped.lower_legs.position
-    foot = quadruped.lf.foot_from_hip
+    foot = quadruped.lf.foot.position
     current_duration = time.time() - start
     average_duration += current_duration
-    # robot_viz.plot_leg(3, view='s', latch=100)
     leg_viz.plot_legs(latch=100)
-
-    # time.sleep(0.001)
-
-average_duration /= iterations
-print(f'Average controller execution time per step: {average_duration * 1000} milliseconds')
-print(f'Max frequency {1 / average_duration} Hz')
