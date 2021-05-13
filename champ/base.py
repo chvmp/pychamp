@@ -78,16 +78,14 @@ class Base(object):
         return self._leg_zero_stances
 
     def transform_to_hip(self, foot_positions):
-        new_foot_pos = copy.deepcopy(foot_positions)
-        new_foot_pos -= self.hips.translation
+        foot_positions = translate(foot_positions, -self.hips.translation)
         
-        return new_foot_pos
+        return foot_positions
     
     def transform_to_base(self, foot_positions):
-        new_foot_pos = copy.deepcopy(foot_positions)
-        new_foot_pos = translate(new_foot_pos, self.hips.translation)
+        foot_positions = translate(foot_positions, self.hips.translation)
 
-        return new_foot_pos
+        return foot_positions
 
     def __get_knee_direction(self, direction):
         if direction == '>':
