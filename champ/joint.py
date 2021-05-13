@@ -100,11 +100,13 @@ class JointVector:
     @property 
     def position(self, from_base=False):
         position = np.zeros((4,3))
-        for i in range(self._id, 0, -1):
-            position = translate(position, self._parent._joint_vector[i].translation)
+        for i in range(self._id, -1, -1):
+            position = translate(position, self._parent.joints[i].translation)
             if i > 1:
-                position = rotate_y(position, self._parent._joint_vector[i-1].theta)
-        
+                position = rotate_y(position, self._parent.joints[i-1].theta)
+            elif i == 1:
+                position = rotate_x(position, self._parent.joints[i-1].theta)
+
         return position
 
     @property
