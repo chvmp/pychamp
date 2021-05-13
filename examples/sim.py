@@ -108,11 +108,15 @@ class Champ:
             target_joint_positions = ik.inverse(foot_positions)
 
             joint_positions = [0.0] * 12
-
+            
             joint_states = p.getJointStates(champ, bullet_joint_indices)
             for i, joint_info in enumerate(joint_states):
                 position = joint_info[0]
                 joint_positions[i] = position
+
+            quadruped.joint_positions = joint_positions
+            foot_positions_from_base = quadruped.feet.position
+            foot_positions_from_hip = quadruped.transform_to_hip(foot_positions_from_base)
 
             p.setJointMotorControlArray(champ, bullet_joint_indices, p.POSITION_CONTROL, list(target_joint_positions))
             p.stepSimulation()
