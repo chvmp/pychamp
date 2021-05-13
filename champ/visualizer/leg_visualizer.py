@@ -54,7 +54,6 @@ class LegVisualizer:
         legs = np.append(legs, self._base.legs[id].upper_leg_from_hip, axis=0)
         legs = np.append(legs, self._base.legs[id].lower_leg_from_hip, axis=0)
         legs = np.append(legs, self._base.legs[id].foot_from_hip, axis=0)
-        
         views = ['side', 'front', 'top']
 
         for i in range(3):
@@ -79,9 +78,11 @@ class LegVisualizer:
         self._fig.canvas.flush_events()
 
     def __render(self, window_id, render_list):
+        x_idx, y_idx = self.__view_to_ids(window_id)
+        x_max = np.max(self._joints[window_id].get_data()[0])
+        y_max = np.max(self._joints[window_id].get_data()[1])
+
         for obj in render_list:
-            # self._ax[window_id].relim()
-            # self._ax[window_id].autoscale_view()
             self._ax[window_id].draw_artist(obj)
             
     def __view_to_ids(self, view):
