@@ -4,12 +4,14 @@ from champ.types import Point, Euler
 from champ.geometry import *
 
 class Joint(object):
-    def __init__(self):
+    def __init__(self, parent, id):
+        self._parent = parent
+        self._id = id
         self._translation = np.zeros((1,3))
         self._rotation = np.zeros((1,3))
         self._theta = 0
         self._name = ''
-    
+
     @property
     def translation(self):
         return self._translation
@@ -21,6 +23,32 @@ class Joint(object):
     @property
     def theta(self):
         return self._theta
+
+    @property
+    def position(self):
+        position = np.zeros((1,3))
+        for i in range(self._id, -1, -1):
+            position = translate(position, self._parent.joints[i].translation)
+            if i > 1:
+                position = rotate_y(position, self._parent.joints[i-1].theta)
+            elif i == 1:
+                position = rotate_x(position, self._parent.joints[i-1].theta)
+
+        return position
+
+    #localhip
+    # @property
+    # def position(self):
+    #     position = np.zeros((1,3))
+    #     for i in range(self._id, 0, -1):
+    #         if i > 0:
+    #             position = translate(position, self._parent.joints[i].translation)
+    #         if i > 1:
+    #             position = rotate_y(position, self._parent.joints[i-1].theta)
+    #         elif i == 1:
+    #             position = rotate_x(position, self._parent.joints[i-1].theta)
+
+    #     return position
 
     @theta.setter
     def theta(self, angle):
