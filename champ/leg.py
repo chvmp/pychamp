@@ -33,53 +33,98 @@ class Leg(object):
 
     @property
     def upper_leg_from_hip(self):
-        return copy.deepcopy(self.upper_leg.translation)
+        upper_leg_from_position = np.zeros((1,3))
+        for i in range(1, 0, -1):
+            if i > 0:
+                upper_leg_from_position = translate(upper_leg_from_position, self.joints[i].translation)
+            if i > 1:
+                upper_leg_from_position = rotate_y(upper_leg_from_position, self.joints[i-1].theta)
+            elif i == 1:
+                upper_leg_from_position = rotate_x(upper_leg_from_position, self.joints[i-1].theta)
+
+        return upper_leg_from_position
 
     @property
     def lower_leg_from_hip(self):
         lower_leg_position = np.zeros((1,3))
         for i in range(2, 0, -1):
-            lower_leg_position = translate(lower_leg_position, self.joints[i].translation)
+            if i > 0:
+                lower_leg_position = translate(lower_leg_position, self.joints[i].translation)
             if i > 1:
                 lower_leg_position = rotate_y(lower_leg_position, self.joints[i-1].theta)
-        
+            elif i == 1:
+                lower_leg_position = rotate_x(lower_leg_position, self.joints[i-1].theta)
+
         return lower_leg_position
 
     @property
     def foot_from_hip(self):
         foot_position = np.zeros((1,3))
         for i in range(3, 0, -1):
-            foot_position = translate(foot_position, self.joints[i].translation)
+            if i > 0:
+                foot_position = translate(foot_position, self.joints[i].translation)
             if i > 1:
                 foot_position = rotate_y(foot_position, self.joints[i-1].theta)
-        
+            elif i == 1:
+                foot_position = rotate_x(foot_position, self.joints[i-1].theta)
+
         return foot_position
 
     @property
     def hip_from_base(self):
-        return copy.deepcopy(self.hip.translation)
+        position = np.zeros((1,3))
+        for i in range(0, -1, -1):
+            position = translate(position, self.joints[i].translation)
+            if i > 1:
+                position = rotate_y(position, self.joints[i-1].theta)
+            elif i == 1:
+                position = rotate_x(position, self.joints[i-1].theta)
+
+        return position
 
     @property
     def upper_leg_from_base(self):
-        return self.transform_to_base(self.upper_leg_from_hip)
+        position = np.zeros((1,3))
+        for i in range(1, -1, -1):
+            position = translate(position, self.joints[i].translation)
+            if i > 1:
+                position = rotate_y(position, self.joints[i-1].theta)
+            elif i == 1:
+                position = rotate_x(position, self.joints[i-1].theta)
+
+        return position
 
     @property
     def lower_leg_from_base(self):
-        return self.transform_to_base(self.lower_leg_from_hip)
+        position = np.zeros((1,3))
+        for i in range(2, -1, -1):
+            position = translate(position, self.joints[i].translation)
+            if i > 1:
+                position = rotate_y(position, self.joints[i-1].theta)
+            elif i == 1:
+                position = rotate_x(position, self.joints[i-1].theta)
+
+        return position
 
     @property
     def foot_from_base(self):
-        return self.transform_to_base(self.foot_from_hip)
+        position = np.zeros((1,3))
+        for i in range(3, -1, -1):
+            position = translate(position, self.joints[i].translation)
+            if i > 1:
+                position = rotate_y(position, self.joints[i-1].theta)
+            elif i == 1:
+                position = rotate_x(position, self.joints[i-1].theta)
+
+        return position
 
     def transform_to_hip(self, foot_position):
-        foot_position[0, 0] -= self.hip.translation[0, 0]
-        foot_position[0, 1] -= self.hip.translation[0, 1]
+        foot_position = translate(foot_position, -self.hip.translation)
 
         return foot_position
 
     def transform_to_base(self, foot_position):
-        foot_positions = translate(foot_position, self.hip.translation)
-        foot_positions = rotate_x(foot_position, self.hip.theta)
+        foot_position = translate(foot_position, self.hip.translation)
 
         return foot_position
 
