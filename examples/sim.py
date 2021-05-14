@@ -25,9 +25,9 @@ class Champ:
     def __init__(self):
         #change to the robot you want to use ie.
         # robot_profile = spot
-        # robot_profile = anymal_b
+        robot_profile = anymal_b
         # robot_profile = anymal_c
-        robot_profile = open_quadruped
+        # robot_profile = open_quadruped
 
         quadruped = Base(robot_profile)
         controller = CheetahOne(quadruped, robot_profile.gait_config)
@@ -47,7 +47,7 @@ class Champ:
         p.setAdditionalSearchPath(pybullet_data.getDataPath()) #optionally
         p.setGravity(0,0,-10)
         plane_id = p.loadURDF("plane.urdf")
-        champ_start_pos = [0,0, 1.0]
+        champ_start_pos = [0,0, robot_profile.gait_config.nominal_height * 1.5]
         champ_start_orientation = p.getQuaternionFromEuler([0,0,0])
         champ = p.loadURDF(robot_profile.urdf, champ_start_pos, champ_start_orientation)
         num_joints = p.getNumJoints(champ)
@@ -71,7 +71,7 @@ class Champ:
         for i in range(3500):
             if i == 0:
                 print("Linear Velocity X")
-                req_vel.linear.x = 0.3
+                req_vel.linear.x = 0.5
                 req_vel.linear.y = 0.0
                 req_vel.angular.z = 0.0
             elif i == 500:
@@ -86,12 +86,12 @@ class Champ:
                 req_vel.angular.z = 1.0
             elif i == 1500:
                 print("Turning")
-                req_vel.linear.x = 0.3
+                req_vel.linear.x = 0.5
                 req_vel.linear.y = 0.0
                 req_vel.angular.z = 1.0
             elif i == 2000:
-                print("Linear Velocity XZ")
-                req_vel.linear.x = 0.3
+                print("Linear Velocity XY")
+                req_vel.linear.x = 0.5
                 req_vel.linear.y = 1.0
                 req_vel.angular.z = 0.0
             elif i ==  2500:
@@ -120,7 +120,6 @@ class Champ:
 
             p.setJointMotorControlArray(champ, bullet_joint_indices, p.POSITION_CONTROL, list(target_joint_positions))
             p.stepSimulation()
-            
         p.disconnect()
 
 if __name__ == '__main__':
