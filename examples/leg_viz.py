@@ -44,7 +44,7 @@ quadruped.rh.foot.set_origin(0, 0, -0.141)
 
 quadruped.init()
 controller = CheetahOne(quadruped, gait_config)
-ik = Kinematics(quadruped)
+ik = Kinematics(quadruped, gait_config.knee_orientation)
 leg_viz = LegVisualizer(quadruped)
 
 req_pose = Pose()
@@ -52,14 +52,13 @@ req_pose.position.z = gait_config.nominal_height
 
 req_vel = Velocities()
 req_vel.linear.x = 1.0
-req_vel.linear.y = 1.0
 
 average_duration = 0
 iterations = 5000
 
 for i in range(iterations):
     start = time.time()
-
+    leg_viz.plot_legs(id=0,latch=100)
     foot_positions = controller.walk(req_pose, req_vel)
     joint_positions = ik.inverse(foot_positions)
     quadruped.joint_positions = joint_positions
@@ -68,4 +67,3 @@ for i in range(iterations):
     foot = quadruped.lf.foot.position
     current_duration = time.time() - start
     average_duration += current_duration
-    leg_viz.plot_legs(latch=100)
