@@ -5,7 +5,7 @@ import numpy as np
 from champ.geometry import *
 
 class PoseGenerator:
-    def __init__(self, amp=1.5, freq=0.5, phase_shift=0):
+    def __init__(self, amp=1.5, freq=0.5, phase_shift=0.0):
         self._amplitude = amp
         self._frequency = freq
         self._start = 0.0
@@ -26,14 +26,15 @@ class PoseGenerator:
         return self._amplitude * math.sin((2.0 * math.pi * t) + self._phase_shift)
 
 class BodyController(object):
-    def __init__(self, base):
+    def __init__(self, base, com_x_translation=0.0):
         self._base = base
         self._zero_stances = base.zero_stances
+        self._com_x_translation = com_x_translation
 
     def pose_command(self, req_pose):
         foot_positions = copy.deepcopy(self._zero_stances)
         
-        req_translation_x = -req_pose.position.x
+        req_translation_x = -req_pose.position.x - self._com_x_translation
         req_translation_y = -req_pose.position.y
         req_translation_z = -(foot_positions[0, 2] + req_pose.position.z)
         #cap the translation in z axis to a 65 percent of the robot's leg length
