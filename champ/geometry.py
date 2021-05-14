@@ -16,17 +16,17 @@ def translate(vector, translation):
     return vector
 
 def translate_x(vector, translation):
-    vector[:0] = translation
+    vector[:, 0] += translation
 
     return vector
 
 def translate_y(vector, translation):
-    vector[:1] = translation
+    vector[:, 1] += translation
     
     return vector
 
 def translate_z(vector, translation):
-    vector[:2] = translation
+    vector[:, 2] += translation
     
     return vector
 
