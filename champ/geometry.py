@@ -12,6 +12,22 @@ def vectorize_theta(vector, theta):
 
 def translate(vector, translation):
     vector += translation
+
+    return vector
+
+def translate_x(vector, translation):
+    vector[:0] = translation
+
+    return vector
+
+def translate_y(vector, translation):
+    vector[:1] = translation
+    
+    return vector
+
+def translate_z(vector, translation):
+    vector[:2] = translation
+    
     return vector
 
 def rotate_x(vector, theta):
