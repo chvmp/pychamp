@@ -28,7 +28,7 @@ class LegVisualizer:
 
             (self._legs[i],) = self._ax[i].plot(vec[:, 0], vec[:, 1])
             (self._joints[i],) = self._ax[i].plot(vec[:, 0], vec[:, 1], 'gh', markersize=10)
-            (self._foot[i],) = self._ax[i].plot(vec[:, 0], vec[:, 1], 'ro', markersize=1)
+            (self._foot[i],) = self._ax[i].plot(vec[:, 0], vec[:, 1],'ro', markersize=1)
             self._latch_pool[i] = np.empty((self._latch_buffer_size, 3))
         
         self._init = False
@@ -40,8 +40,7 @@ class LegVisualizer:
         self._background = self._fig.canvas.copy_from_bbox(self._fig.bbox)
         self._fig.canvas.blit(self._fig.bbox)
 
-    def plot_legs(self, id=0, latch=100):
-
+    def plot_legs(self, id=0, latch=0):
         if latch > self._latch_buffer_size:
             latch = self._latch_buffer_size
 
@@ -62,7 +61,7 @@ class LegVisualizer:
             to_render = []
             x_idx, y_idx = self.__view_to_ids(views[i])
 
-            if latch:
+            if latch > 0:
                 self._latch_pool[i] = np.roll(self._latch_pool[i], 1, axis=0)
                 self._latch_pool[i][0,] = legs[2,]
                 
