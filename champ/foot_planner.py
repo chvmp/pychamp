@@ -76,8 +76,7 @@ class BezierCurve(object):
         self._run_once = False
         self._height_ratio = 0.0
         self._length_ratio = 0.0
-        self._prev_foot_positions = np.zeros((4, 3))
-        self._prev_proj_foot = np.zeros((4, 3))
+        self._pref_foot_positions = np.zeros((4, 3))
 
         self.__update_control_points_height(swing_height)
 
@@ -98,7 +97,11 @@ class BezierCurve(object):
             self._control_points_x[11] = half_step
 
     def generate(self, foot_positions, step_length, rotation, gait):
+        if not self._run_once:
+            self._pref_foot_positions = foot_positions    
+
         if step_length == 0.0:
+            self._pref_foot_positions = foot_positions
             return foot_positions
 
         swing_phase_signals, stance_phase_signals = gait
@@ -138,17 +141,18 @@ class BezierCurve(object):
 
         #create a projected foot position using calculated X, and Zs
         projected_foot = np.hstack((x,y,z))
-        projected_foot = np.where((swing_phase_signals == 0) & (stance_phase_signals == 0),
-                                  self._prev_proj_foot,
-                                  projected_foot)
         
         #rotate the trajectory plane in the Z axis
         #rotation is based on RaiberHeuristic(velocities, stance_duration, COM_TO_LEG_DISTANCE)
         projected_foot = rotate_z(projected_foot, rotation)
         
-        #add the projected foot to the reference foot position
         foot_positions = translate(foot_positions, projected_foot)
-  
-        self._prev_proj_foot = projected_foot
+
+        #add the projected foot to the reference foot position
+        # foot_positions = np.where((swing_phase_signals == 0.0) & (stance_phase_signals == 0.0),
+        #                           self._pref_foot_positions,
+        #                           foot_positions)
+
+        self._pref_foot_positions = foot_positions
 
         return foot_positions
