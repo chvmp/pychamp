@@ -12,7 +12,7 @@ setup(
               'champ.controllers',
               'champ.visualizer',
               'champ.robots',
-              'champ.robots.anymal_c'],
+              'champ.pybullet'],
     include_package_data=True,
     package_data = {'champ': ['robots/aliengo/*', 'robots/aliengo/meshes/*',
                               'robots/anymal_b/*', 'robots/anymal_b/meshes/*',
