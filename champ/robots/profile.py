@@ -160,7 +160,7 @@ class Spot:
     gait_config.knee_orientation = ">>"
     gait_config.pantograph_leg = False
     gait_config.odom_scaler = 1.2
-    gait_config.max_linear_velocity_x = 1.5
+    gait_config.max_linear_velocity_x = 0.5
     gait_config.max_linear_velocity_y = 0.25
     gait_config.max_angular_velocity_z = 1.0
     gait_config.com_x_translation = -0.05
