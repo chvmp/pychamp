@@ -49,8 +49,8 @@ class Champ:
         req_pose.position.z = robot_profile.gait_config.nominal_height
         req_vel = Velocities()
 
+        pb_utils.print_teleop_instructions()
         while True:
-            pb_utils.follow_robot(champ)
             req_vel = pb_utils.get_req_vel(champ, req_vel)
        
             foot_positions = controller.walk(req_pose, req_vel)
@@ -62,6 +62,7 @@ class Champ:
 
             p.setJointMotorControlArray(champ, sensors.actuator_ids, p.POSITION_CONTROL, list(target_joint_positions))
             p.stepSimulation()
+
 
         p.disconnect()
 
