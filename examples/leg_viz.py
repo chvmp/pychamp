@@ -57,13 +57,8 @@ average_duration = 0
 iterations = 5000
 
 for i in range(iterations):
-    start = time.time()
     leg_viz.plot_legs(id=0,latch=100)
     foot_positions = controller.walk(req_pose, req_vel)
     joint_positions = ik.inverse(foot_positions)
     quadruped.joint_positions = joint_positions
-    upper_leg = quadruped.upper_legs.position
-    lower_leg = quadruped.lower_legs.position
-    foot = quadruped.lf.foot.position
-    current_duration = time.time() - start
-    average_duration += current_duration
+    time.sleep(0.01)
