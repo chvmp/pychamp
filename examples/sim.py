@@ -63,7 +63,6 @@ class Champ:
             p.setJointMotorControlArray(champ, sensors.actuator_ids, p.POSITION_CONTROL, list(target_joint_positions))
             p.stepSimulation()
 
-
         p.disconnect()
 
 if __name__ == '__main__':
