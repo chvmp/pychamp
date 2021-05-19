@@ -24,17 +24,17 @@ import champ.pybullet.utils as pb_utils
 class Champ:
     def __init__(self):
         #change to the robot you want to use ie.
-        # robot_profile = spot
+        robot_profile = spot
         # robot_profile = anymal_b
         # robot_profile = anymal_c
-        robot_profile = open_quadruped
+        # robot_profile = open_quadruped
 
         physics_client = p.connect(p.GUI)
         p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS, 0)
         p.setGravity(0, 0, -9.8)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         plane_id = p.loadURDF("plane.urdf")
-        champ = p.loadURDF(
+        base_id = p.loadURDF(
             robot_profile.urdf, 
             [0, 0, robot_profile.gait_config.nominal_height * 1.5], 
             p.getQuaternionFromEuler([0, 0, 0])
@@ -43,24 +43,28 @@ class Champ:
         quadruped = Base(robot_profile)
         controller = CheetahOne(quadruped, robot_profile.gait_config)
         ik = Kinematics(quadruped, robot_profile.gait_config.knee_orientation)
-        sensors = PyBulletSensors(champ, robot_profile.joint_names, robot_profile.link_names)
+        sensors = PyBulletSensors(plane_id, base_id, robot_profile.joint_names, robot_profile.link_names)
 
         req_pose = Pose()
         req_pose.position.z = robot_profile.gait_config.nominal_height
         req_vel = Velocities()
 
         pb_utils.print_teleop_instructions()
+
+        for i in range(p.getNumJoints(base_id)):
+            joint_info = p.getJointInfo(base_id, i)
+
         while True:
-            req_vel = pb_utils.get_req_vel(champ, req_vel)
+            req_vel = pb_utils.get_req_vel(base_id, req_vel)
        
             foot_positions = controller.walk(req_pose, req_vel)
             target_joint_positions = ik.inverse(foot_positions)
 
-            quadruped.joint_positions = sensors.get_joint_positions()
+            quadruped.joint_positions = sensors.joint_positions()
             foot_positions_from_base = quadruped.feet.position
             foot_positions_from_hip = quadruped.transform_to_hip(foot_positions_from_base)
-
-            p.setJointMotorControlArray(champ, sensors.actuator_ids, p.POSITION_CONTROL, list(target_joint_positions))
+           
+            p.setJointMotorControlArray(base_id, sensors.actuator_ids, p.POSITION_CONTROL, list(target_joint_positions))
             p.stepSimulation()
 
         p.disconnect()
