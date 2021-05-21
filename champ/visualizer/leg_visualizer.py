@@ -52,8 +52,8 @@ class LegVisualizer:
 
         legs = np.empty((0,3))
         for i in range(1, 4):
-            leg_pos = self._base.legs[id].joints[i].position
-            leg_pos = self._base.legs[id].transform_to_hip(leg_pos)
+            leg_pos = self._base.joints[i].position[i, :].reshape(1,3)
+            leg_pos = self._base.transform_to_hip(leg_pos, leg_id=id)
             legs = np.append(legs, leg_pos, axis=0)
 
         views = ['side', 'front', 'top']

@@ -16,15 +16,14 @@ class CheetahOne(object):
         self._max_linear_y = gait_config.max_linear_velocity_y
         self._max_angular_z = gait_config.max_angular_velocity_z
         self._stance_duration = gait_config.stance_duration
-        self._center_to_nominal = base.lf.center_to_nominal
-        self._ref_foot = copy.deepcopy(base.zero_stances)
+        self._center_to_nominal = base.legs.center_to_nominal
+        self._ref_foot = copy.deepcopy(base.legs.zero_stances)
         self._ref_foot = translate_x(self._ref_foot, gait_config.com_x_translation)
 
         self._body_controller = BodyController(base, gait_config.com_x_translation)
         self._gait_generator = TDEvent(gait_config.stance_duration)
         self._swing_trajectory = BezierCurve(gait_config.swing_height)
         self._stance_trajectory = HalfSine(gait_config.stance_depth)
-
    
     def walk(self, req_pose, req_vel, now=None):
         if now is None:
@@ -38,7 +37,8 @@ class CheetahOne(object):
         req_vel.linear.y = clip(req_vel.linear.y, -self._max_linear_y, self._max_linear_y)
         req_vel.angular.z = clip(req_vel.angular.z, -self._max_angular_z, self._max_angular_z)
 
-        #use Raibert Heuristic to calculate body's translation and rotation
+        #use Raibert Heuristic to calculate how much the body should 
+        #translate and rotate
         step_x, step_y, theta = raibert_heuristic(
             req_vel,
             self._stance_duration,

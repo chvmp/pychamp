@@ -8,15 +8,15 @@ class Kinematics(object):
         self._half_pi = np.math.pi / 2.0
 
         #Y distance from the hip to the foot
-        self._l0 = base.upper_legs.translation[:,1, np.newaxis]  +\
-                   base.lower_legs.translation[:,1, np.newaxis]  +\
-                   base.feet.translation[:,1, np.newaxis] 
+        self._l0 = base.upper_legs.translation.y  +\
+                   base.lower_legs.translation.y  +\
+                   base.feet.translation.y
 
-        lower_leg_x = base.lower_legs.translation[:, 0, np.newaxis] 
-        lower_leg_z = base.lower_legs.translation[:, 2, np.newaxis] 
+        lower_leg_x = base.lower_legs.translation.x
+        lower_leg_z = base.lower_legs.translation.z
 
-        feet_x = base.feet.translation[:, 0, np.newaxis]     
-        feet_z = base.feet.translation[:, 2, np.newaxis] 
+        feet_x = base.feet.translation.x
+        feet_z = base.feet.translation.z
 
         #hypotenuse of upper leg link if the robot has x displacement
         #from upper leg to knee
@@ -38,7 +38,7 @@ class Kinematics(object):
         self._ll_arc_denom = (2.0 * self._l1 * self._l2)
 
         #translation from hip to upper leg
-        self._upper_leg_trans = copy.deepcopy(base.upper_legs.translation)
+        self._upper_leg_trans = copy.deepcopy(base.upper_legs.translation.xyz)
         self._upper_leg_trans[:, 1] = 0.0
 
         self._knee_directions = vectorize_knee_orientation(knee_orientation)

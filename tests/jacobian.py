@@ -82,9 +82,9 @@ quadruped = Base(anymal_c)
 
 joint_states = np.zeros((12,1))
 hip_trans = quadruped.hips.translation
-upper_leg_trans =quadruped.upper_legs.translation
-lower_leg_trans = quadruped.lower_legs.translation
-feet_trans = quadruped.feet.translation
+upper_leg_trans =quadruped.upper_legs.translation.xyz
+lower_leg_trans = quadruped.lower_legs.translation.xyz
+feet_trans = quadruped.feet.translation.xyz
 
 start = time.time()
 calc_jacobian = get_jacobian(

@@ -28,7 +28,7 @@ class PoseGenerator:
 class BodyController(object):
     def __init__(self, base, com_x_translation=0.0):
         self._base = base
-        self._zero_stances = base.zero_stances
+        self._zero_stances = base.legs.zero_stances
         self._com_x_translation = com_x_translation
 
     def pose_command(self, req_pose):

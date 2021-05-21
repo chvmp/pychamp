@@ -1,14 +1,14 @@
 import time
 import numpy as np
 
-def vectorize_theta(vector, theta):
-    if isinstance(theta, int) or isinstance(theta, float):
+def vectorize(vector, scalar):
+    if isinstance(scalar, int) or isinstance(scalar, float):
         n, _ = vector.shape
-        new_theta = np.zeros((n,1))
-        new_theta[:,0] = theta
-        return new_theta
+        new_vector = np.zeros((n,1))
+        new_vector[:, 0] = scalar
+        return new_vector
     else:
-        return theta
+        return scalar
 
 def translate(vector, translation):
     vector += translation
@@ -16,22 +16,25 @@ def translate(vector, translation):
     return vector
 
 def translate_x(vector, translation):
-    vector[:, 0] += translation
+    translation = vectorize(vector, translation)
+    vector[:, 0] += translation[:,0]
 
     return vector
 
 def translate_y(vector, translation):
-    vector[:, 1] += translation
+    translation = vectorize(vector, translation)
+    vector[:, 1] += translation[:,0]
     
     return vector
 
 def translate_z(vector, translation):
-    vector[:, 2] += translation
+    translation = vectorize(vector, translation)
+    vector[:, 2] += translation[:,0]
     
     return vector
 
 def rotate_x(vector, theta):
-    theta = vectorize_theta(vector, theta)
+    theta = vectorize(vector, theta)
 
     cos_theta = np.cos(theta[:, 0])
     sin_theta = np.sin(theta[:, 0])
@@ -45,7 +48,7 @@ def rotate_x(vector, theta):
     return vector
 
 def rotate_y(vector, theta):
-    theta = vectorize_theta(vector, theta)
+    theta = vectorize(vector, theta)
 
     cos_theta = np.cos(theta[:, 0])
     sin_theta = np.sin(theta[:, 0])
@@ -59,7 +62,7 @@ def rotate_y(vector, theta):
     return vector
 
 def rotate_z(vector, theta):
-    theta = vectorize_theta(vector, theta)
+    theta = vectorize(vector, theta)
 
     cos_theta = np.cos(theta[:, 0])
     sin_theta = np.sin(theta[:, 0])
