@@ -24,10 +24,10 @@ import champ.pybullet.utils as pb_utils
 class Champ:
     def __init__(self):
         #change to the robot you want to use ie.
-        robot_profile = spot
+        # robot_profile = spot
         # robot_profile = anymal_b
         # robot_profile = anymal_c
-        # robot_profile = open_quadruped
+        robot_profile = open_quadruped
 
         physics_client = p.connect(p.GUI)
         p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS, 0)
