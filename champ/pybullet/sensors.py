@@ -56,14 +56,14 @@ class PyBulletSensors:
         return foot_contacts
 
     def base_velocity(self):
-        return p.getBaseVelocity(self._base_id)
+        return p.getBaseVelocity(self._base_id) #tuple(linear, angular)
 
     def base_position(self):
-        return p.getBasePositionAndOrientation(self._base_id)[0]
+        return p.getBasePositionAndOrientation(self._base_id)[0] #tuple(x,y,z)
 
     def base_orientation_rpy(self):
         quat = p.getBasePositionAndOrientation(self._base_id)[1]
-        return p.getEulerFromQuaternion(quat)
+        return p.getEulerFromQuaternion(quat) #roll, pitch, yaw
 
     def base_orientation_quat(self):
-        return p.getBasePositionAndOrientation(self._base_id)[1]
+        return p.getBasePositionAndOrientation(self._base_id)[1] #x, y, z, w
