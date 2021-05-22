@@ -30,6 +30,7 @@ class Champ:
         robot_profile = open_quadruped
 
         physics_client = p.connect(p.GUI)
+        p.setRealTimeSimulation(True)
         p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS, 0)
         p.setGravity(0, 0, -9.8)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -65,7 +66,6 @@ class Champ:
             foot_positions_from_hip = quadruped.transform_to_hip(foot_positions_from_base)
            
             p.setJointMotorControlArray(base_id, sensors.actuator_ids, p.POSITION_CONTROL, list(target_joint_positions))
-            p.stepSimulation()
 
         p.disconnect()
 
