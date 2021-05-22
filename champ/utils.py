@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def vectorize_knee_orientation(knee_orientation):
     def get_knee_direction(direction):
         if direction == '>':

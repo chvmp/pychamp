@@ -3,9 +3,9 @@ import math
 import numpy as np
 from champ.leg import Leg
 from champ.joint import Joint
-from champ.types import GaitConfig
 from champ.geometry import translate, translate_x, translate_y, translate_z, rotate_x
 import champ.urdf as urdf
+
 
 class Base(object):
     def __init__(self, robot_profile=None):        

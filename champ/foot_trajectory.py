@@ -9,13 +9,11 @@ def constrain_swing_height(swing_height):
     
     return swing_height
 
-
 def constrain_stance_depth(stance_depth):
     if stance_depth > 0.0:
         stance_depth = -stance_depth
     
     return stance_depth
-
 
 def transform_trajectory_point(foot_positions, x, z, trajectory_rotation):
     y = np.zeros((4,1))

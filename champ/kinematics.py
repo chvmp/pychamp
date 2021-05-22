@@ -3,6 +3,7 @@ import copy
 from champ.geometry import *
 from champ.utils import vectorize_knee_orientation
 
+
 class Kinematics(object):
     def __init__(self, base, knee_orientation='>>'):
         self._half_pi = np.math.pi / 2.0

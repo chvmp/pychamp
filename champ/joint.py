@@ -3,6 +3,7 @@ import numpy as np
 from champ.types import Point, Euler
 from champ.geometry import *
 
+
 class Translation(object):
     def __init__(self, parent, id):
         self._parent = parent

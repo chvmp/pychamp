@@ -1,5 +1,6 @@
 from urdf_parser_py.urdf import URDF
 
+
 def _get_joint_origin(robot, joint_name):
     for joint in robot.joints:
         if joint.name == joint_name:

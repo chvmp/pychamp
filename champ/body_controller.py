@@ -4,6 +4,7 @@ import time
 import numpy as np
 from champ.geometry import *
 
+
 class PoseGenerator:
     def __init__(self, amp=1.5, freq=0.5, phase_shift=0.0):
         self._amplitude = amp

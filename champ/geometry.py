@@ -2,6 +2,7 @@ import time
 import math
 import numpy as np
 
+
 def vectorize(vector, scalar):
     if isinstance(scalar, int) or isinstance(scalar, float):
         n, _ = vector.shape
