@@ -2,7 +2,7 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-from champ.types import Pose, GaitConfig, Velocities
+from champ.types import Pose, Velocities
 from champ.base import Base
 from champ.controllers.cheetah_one import CheetahOne
 from champ.kinematics import Kinematics

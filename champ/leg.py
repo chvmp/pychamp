@@ -3,7 +3,7 @@ import copy
 import numpy as np
 from champ.joint import Joint
 from champ.geometry import *
-from champ.types import Point, GaitConfig
+from champ.types import Point
 
 
 class Leg(object):
