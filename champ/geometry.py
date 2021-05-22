@@ -1,4 +1,5 @@
 import time
+import math
 import numpy as np
 
 def vectorize(vector, scalar):
@@ -74,3 +75,50 @@ def rotate_z(vector, theta):
     vector[:, 1] = y
 
     return vector
+
+def quat_to_matrix(x=0, y=0, z=0, w=1):
+    rotation_matrix = np.zeros((3,3))
+
+    w_squared = w * w
+    y_z = y * z
+    x_y = x * y
+    x_z = x * z
+    w_x = w * x
+    w_y = w * y
+    w_z = w * z
+
+    rotation_matrix[0, 0] = 2 * (w_squared + x * x) - 1
+    rotation_matrix[0, 1] = 2 * (x_y - w_z)
+    rotation_matrix[0, 2] = 2 * (x_z + w_y)
+     
+    rotation_matrix[1, 0] = 2 * (x_y + w_z)
+    rotation_matrix[1, 1] = 2 * (w_squared + y * y) - 1
+    rotation_matrix[1, 2] = 2 * (y_z - w_x)
+     
+    rotation_matrix[2, 0] = 2 * (x_z - w_y)
+    rotation_matrix[2, 1] = 2 * (y_z + w_x)
+    rotation_matrix[2, 2] = 2 * (w_squared + z * z) - 1
+                            
+    return rotation_matrix
+
+def rpy_to_matrix(roll=0, pitch=0, yaw=0):
+    cos_yaw = math.cos(yaw)
+    sin_yaw = math.sin(yaw)
+    cos_pitch = math.cos(pitch)
+    sin_pitch = math.sin(pitch)
+    cos_roll = math.cos(roll)
+    sin_roll = math.sin(roll)
+
+    yaw_r = np.array([[cos_yaw, -sin_yaw,   0],
+                      [sin_yaw,  cos_yaw,   0],
+                      [       0,       0,   1]])
+
+    pitch_r = np.array([[ cos_pitch,   0, sin_pitch],
+                        [         0,   1,         0],
+                        [-sin_pitch,   0, cos_pitch]])
+
+    roll_r = np.array([[  1,        0,         0],
+                       [  0, cos_roll, -sin_roll],
+                       [  0, sin_roll,  cos_roll]])
+
+    return yaw_r * pitch_r * roll_r
