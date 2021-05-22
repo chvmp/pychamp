@@ -22,6 +22,9 @@ class Base(object):
                        self.feet]
 
         self._joint_positions = np.zeros(12)
+        self._mass = 0.0
+        self._moment_of_inertia = np.zeros((3,3))
+        self._dimensions = (0, 0, 0)
 
         if robot_profile is not None:
             if len(robot_profile.link_names) > 0 and len(robot_profile.urdf) > 0:
@@ -43,6 +46,28 @@ class Base(object):
         self.hips.theta = self._joint_positions[0::3, np.newaxis]
         self.upper_legs.theta = self._joint_positions[1::3, np.newaxis]
         self.lower_legs.theta = self._joint_positions[2::3, np.newaxis]
+
+    @property
+    def mass(self):
+        return self._mass
+
+    @mass.setter
+    def mass(self, mass):
+        self._mass = mass
+        self._update_inertial_matrix()
+
+    @property
+    def dimensions(self):
+        return self._dimensions
+
+    @dimensions.setter
+    def dimensions(self, dimensions):
+        self._dimensions = dimensions
+        self._update_inertial_matrix()
+
+    @property
+    def moment_of_inertia(self):
+        return self._moment_of_inertia
 
     def transform_to_hip(self, foot_positions, leg_id=None):
         if leg_id is None:
@@ -95,3 +120,14 @@ class Base(object):
             )
 
         self.init()
+
+    def _update_inertial_matrix(self):
+        length, width, height = self._dimensions
+        print(type(length))       
+
+        self._moment_of_inertia[0, 0] = (1 / 12) * self._mass * (width * width + \
+                                        height * height)
+        self._moment_of_inertia[1, 1] = (1 / 12) * self._mass * (length * length + \
+                                        height * height)
+        self._moment_of_inertia[2, 2] = (1 /12) * self._mass * (length * length + \
+                                        width * width)
