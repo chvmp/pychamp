@@ -8,7 +8,7 @@ from champ.geometry import translate, translate_x, translate_y, translate_z, rot
 import champ.urdf as urdf
 
 class Base(object):
-    def __init__(self, robot_profile=None, load_from_server=False, link_names=None):        
+    def __init__(self, robot_profile=None):        
         self.legs = Leg(self)
 
         self.hips = Joint(self, 0)
@@ -23,11 +23,12 @@ class Base(object):
 
         self._joint_positions = np.zeros(12)
 
-        if link_names is not None:
-            self.__load_translations(link_names)
-        elif robot_profile is not None:
-            self.__load_translations(robot_profile.link_names, 
-                                     robot_profile.urdf)
+        if robot_profile is not None:
+            if len(robot_profile.link_names) > 0 and len(robot_profile.urdf) > 0:
+                self.set_origins_from_urdf(
+                    robot_profile.link_names, 
+                    robot_profile.urdf
+                )
 
     def init(self):
         self.legs.zero_stances
@@ -59,7 +60,7 @@ class Base(object):
 
         return foot_positions
 
-    def __load_translations(self, link_names, urdf_path=None):
+    def set_origins_from_urdf(self, link_names, urdf_path=None):
         translations = urdf.get_translations(link_names, urdf_path)
 
         for i in range(4):

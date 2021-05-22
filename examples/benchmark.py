@@ -6,20 +6,21 @@ from champ.types import Pose, GaitConfig, Velocities
 from champ.base import Base
 from champ.controllers.cheetah_one import CheetahOne
 from champ.kinematics import Kinematics
+from champ.robots.profile import RobotProfile
 
-gait_config = GaitConfig()
-gait_config.pantograph_leg = False
-gait_config.max_linear_velocity_x = 0.5
-gait_config.max_linear_velocity_y = 0.5
-gait_config.max_angular_velocity_z = 1.0
-gait_config.swing_height = 0.04
-gait_config.stance_depth = 0.0
-gait_config.stance_duration = 0.25
-gait_config.nominal_height = 0.2
-gait_config.knee_orientation = ">>"
+custom_profile = RobotProfile()
+custom_profile.pantograph_leg = False
+custom_profile.max_linear_velocity_x = 0.5
+custom_profile.max_linear_velocity_y = 0.5
+custom_profile.max_angular_velocity_z = 1.0
+custom_profile.swing_height = 0.04
+custom_profile.stance_depth = 0.0
+custom_profile.stance_duration = 0.25
+custom_profile.nominal_height = 0.2
+custom_profile.com_x_translation = 0.0
+custom_profile.knee_orientation = ">>"
 
 quadruped = Base()
-quadruped.gait_config = gait_config
 
 quadruped.hips.set_origin(0, 0.175, 0.105, 0)
 quadruped.upper_legs.set_origin(0, 0, 0.06, 0)
@@ -41,11 +42,11 @@ quadruped.upper_legs.set_origin(3, 0, -0.06, 0)
 quadruped.lower_legs.set_origin(3, 0, 0, -0.141)
 quadruped.feet.set_origin(3, 0, 0, -0.141)
 
-controller = CheetahOne(quadruped, gait_config)
+controller = CheetahOne(quadruped, custom_profile)
 ik = Kinematics(quadruped)
 
 req_pose = Pose()
-req_pose.position.z = gait_config.nominal_height
+req_pose.position.z = custom_profile.nominal_height
 
 req_vel = Velocities()
 req_vel.linear.x = 1.0

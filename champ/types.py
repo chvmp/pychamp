@@ -13,22 +13,6 @@ class Euler:
         self.pitch = pitch
         self.yaw = yaw
 
-
-class GaitConfig:
-    def __init__(self):
-        self.knee_orientation = '>>'
-        self.pantograph_leg = False
-        self.odom_scaler = 0.0
-        self.max_linear_velocity_x = 0.0
-        self.max_linear_velocity_y = 0.0
-        self.max_angular_velocity_z = 0.0
-        self.com_x_translation = 0.0
-        self.swing_height = 0.0
-        self.stance_depth = 0.0
-        self.stance_duration = 0.0
-        self.nominal_height = 0.0
-
-
 class Pose:
     def __init__(self):
         self.position = Point()

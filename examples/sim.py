@@ -25,10 +25,10 @@ import champ.geometry as geom
 class Champ:
     def __init__(self):
         #change to the robot you want to use ie.
-        # robot_profile = spot
+        robot_profile = spot
         # robot_profile = anymal_b
         # robot_profile = anymal_c
-        robot_profile = open_quadruped
+        # robot_profile = open_quadruped
 
         physics_client = p.connect(p.GUI)
         p.setRealTimeSimulation(True)
@@ -38,17 +38,17 @@ class Champ:
         plane_id = p.loadURDF("plane.urdf")
         base_id = p.loadURDF(
             robot_profile.urdf, 
-            [0, 0, robot_profile.gait_config.nominal_height * 1.5], 
+            [0, 0, robot_profile.nominal_height * 1.5], 
             p.getQuaternionFromEuler([0, 0, 0])
         )
         
         quadruped = Base(robot_profile)
-        controller = CheetahOne(quadruped, robot_profile.gait_config)
-        ik = Kinematics(quadruped, robot_profile.gait_config.knee_orientation)
+        controller = CheetahOne(quadruped, robot_profile)
+        ik = Kinematics(quadruped, robot_profile.knee_orientation)
         sensors = PyBulletSensors(plane_id, base_id, robot_profile.joint_names, robot_profile.link_names)
 
         req_pose = Pose()
-        req_pose.position.z = robot_profile.gait_config.nominal_height
+        req_pose.position.z = robot_profile.nominal_height
         req_vel = Velocities()
 
         pb_utils.print_teleop_instructions()
@@ -56,8 +56,6 @@ class Champ:
         for i in range(p.getNumJoints(base_id)):
             joint_info = p.getJointInfo(base_id, i)
 
-
-        req_pose.orientation.roll = 0.3
         while True:
             req_vel = pb_utils.get_req_vel(base_id, req_vel)
        

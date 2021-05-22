@@ -11,19 +11,19 @@ from champ.foot_trajectory import BezierCurve, HalfSine
 
 
 class CheetahOne(object):
-    def __init__(self, base, gait_config):
-        self._max_linear_x = gait_config.max_linear_velocity_x
-        self._max_linear_y = gait_config.max_linear_velocity_y
-        self._max_angular_z = gait_config.max_angular_velocity_z
-        self._stance_duration = gait_config.stance_duration
+    def __init__(self, base, robot_profile):
+        self._max_linear_x = robot_profile.max_linear_velocity_x
+        self._max_linear_y = robot_profile.max_linear_velocity_y
+        self._max_angular_z = robot_profile.max_angular_velocity_z
+        self._stance_duration = robot_profile.stance_duration
         self._center_to_nominal = base.legs.center_to_nominal
         self._ref_foot = copy.deepcopy(base.legs.zero_stances)
-        self._ref_foot = translate_x(self._ref_foot, gait_config.com_x_translation)
+        self._ref_foot = translate_x(self._ref_foot, robot_profile.com_x_translation)
 
-        self._body_controller = BodyController(base, gait_config.com_x_translation)
-        self._gait_generator = TDEvent(gait_config.stance_duration)
-        self._swing_trajectory = BezierCurve(gait_config.swing_height)
-        self._stance_trajectory = HalfSine(gait_config.stance_depth)
+        self._body_controller = BodyController(base, robot_profile.com_x_translation)
+        self._gait_generator = TDEvent(robot_profile.stance_duration)
+        self._swing_trajectory = BezierCurve(robot_profile.swing_height)
+        self._stance_trajectory = HalfSine(robot_profile.stance_depth)
    
     def walk(self, req_pose, req_vel, now=None):
         if now is None:
