@@ -1,7 +1,7 @@
 import pybullet as p
 import numpy as np
 
-class PyBulletSensors:
+class PyBulletSensors(object):
     def __init__(self, plane_id, base_id, joint_names, link_names):
         self._base_id = base_id
         self._plane_id = plane_id

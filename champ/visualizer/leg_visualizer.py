@@ -59,7 +59,7 @@ class LegVisualizer:
         views = ['side', 'front', 'top']
         for i in range(3):
             to_render = []
-            x_idx, y_idx = self.__view_to_ids(views[i])
+            x_idx, y_idx = self._view_to_ids(views[i])
 
             if latch > 0:
                 self._latch_pool[i] = np.roll(self._latch_pool[i], 1, axis=0)
@@ -73,20 +73,20 @@ class LegVisualizer:
             to_render.append(self._legs[i])
             to_render.append(self._joints[i])
 
-            self.__render(i, to_render)
+            self._render(i, to_render)
         
         self._fig.canvas.blit(self._fig.bbox)
         self._fig.canvas.flush_events()
 
-    def __render(self, window_id, render_list):
-        x_idx, y_idx = self.__view_to_ids(window_id)
+    def _render(self, window_id, render_list):
+        x_idx, y_idx = self._view_to_ids(window_id)
         x_max = np.max(self._joints[window_id].get_data()[0])
         y_max = np.max(self._joints[window_id].get_data()[1])
 
         for obj in render_list:
             self._ax[window_id].draw_artist(obj)
             
-    def __view_to_ids(self, view):
+    def _view_to_ids(self, view):
         if view == 'side':
             x_idx = 0
             y_idx = 2

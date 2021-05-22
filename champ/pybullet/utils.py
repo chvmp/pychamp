@@ -2,6 +2,7 @@ import pybullet as p
 from champ.utils import clip
 from champ.types import Pose, Velocities
 
+
 def follow_robot(id, distance=2.0):
     p.resetDebugVisualizerCamera(
         cameraDistance=distance, 
@@ -9,6 +10,7 @@ def follow_robot(id, distance=2.0):
         cameraPitch=-15.51, 
         cameraTargetPosition= p.getBasePositionAndOrientation(id)[0]
     )
+
 
 def get_req_vel(id, req_vel, max_linear_x=0.5, max_linear_y=0.5, max_angular_z=1.0):
     keys = p.getKeyboardEvents()

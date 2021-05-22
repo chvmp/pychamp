@@ -29,7 +29,7 @@ def transform_trajectory_point(foot_positions, x, z, trajectory_rotation):
     return foot_positions
 
 
-class BezierCurve(object):
+class BezierCurve:
     def __init__(self, swing_height):
         swing_height = constrain_swing_height(swing_height)
         
@@ -119,7 +119,7 @@ class BezierCurve(object):
 
 
 
-class HalfSine(object):
+class HalfSine:
     def __init__(self, stance_depth):
         self._stance_depth = constrain_stance_depth(stance_depth)
 

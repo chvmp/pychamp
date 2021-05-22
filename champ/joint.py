@@ -31,7 +31,7 @@ class Translation(object):
         self._translation[leg_id, 1] = y
         self._translation[leg_id, 2] = z
 
-class Joint:
+class Joint(object):
     def __init__(self, parent, id):
         self.translation = Translation(parent, id)
         self._parent = parent

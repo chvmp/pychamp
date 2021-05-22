@@ -4,7 +4,7 @@ import numpy as np
 SECONDS_TO_MICROS = 1000000.0
 
 
-class TDEvent(object):
+class TDEvent:
     def __init__(self, stance_duration=0.25, swing_duration=0.25):
         self._swing_phase_period = swing_duration * SECONDS_TO_MICROS
         self._stance_phase_period = stance_duration  * SECONDS_TO_MICROS

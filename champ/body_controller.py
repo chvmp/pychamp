@@ -26,7 +26,7 @@ class PoseGenerator:
 
         return self._amplitude * math.sin((2.0 * math.pi * t) + self._phase_shift)
 
-class BodyController(object):
+class BodyController:
     def __init__(self, base, com_x_translation=0.0):
         self._base = base
         self._zero_stances = base.legs.zero_stances
