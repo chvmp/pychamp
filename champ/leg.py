@@ -16,6 +16,8 @@ class Leg(object):
         self._center_to_nominal = 0.0
         self._center_to_nominal_calculated = False
 
+        self._contact_state = np.zeros((4,1))
+
     @property
     def zero_stances(self):
         if not self._zero_stances_vectorized:
@@ -98,3 +100,15 @@ class Leg(object):
         jacobian[: ,2, 2] = -(foot_x_cos_lu + foot_z_sin_lu) * cos_h
         
         return jacobian  
+
+    @property
+    def contact_state(self):
+        return self._contact_state
+
+    @contact_state.setter
+    def contact_state(self, contact_state):
+        self._contact_state[0, 0] = contact_state[0]
+        self._contact_state[1, 0] = contact_state[1]
+        self._contact_state[2, 0] = contact_state[2]
+        self._contact_state[3, 0] = contact_state[3]
+
