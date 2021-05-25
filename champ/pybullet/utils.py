@@ -1,6 +1,6 @@
 import pybullet as p
 from champ.utils import clip
-from champ.types import Pose, Velocities
+from champ.types import Pose, Twist
 
 
 def follow_robot(id, distance=2.0):

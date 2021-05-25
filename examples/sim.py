@@ -3,7 +3,7 @@ import time
 import numpy as np
 import pybullet as p
 import pybullet_data
-from champ.types import Pose, Velocities
+from champ.types import Pose, Twist
 from champ.base import Base
 from champ.controllers.cheetah_one import CheetahOne
 from champ.kinematics import Kinematics
@@ -49,7 +49,7 @@ class Champ:
 
         req_pose = Pose()
         req_pose.position.z = robot_profile.nominal_height
-        req_vel = Velocities()
+        req_vel = Twist()
 
         pb_utils.print_teleop_instructions()
 
@@ -62,8 +62,6 @@ class Champ:
             foot_positions = controller.walk(req_pose, req_vel)
             target_joint_positions = ik.inverse(foot_positions)
 
-            quadruped.joint_positions = sensors.joint_positions()
-
             base_orientation = sensors.base_orientation_quat()
             base_rot_matrix = geom.quat_to_matrix(
                 x=base_orientation[0],
@@ -71,7 +69,7 @@ class Champ:
                 z=base_orientation[2],
                 w=base_orientation[3]
             )
- 
+
             base_orientation = sensors.base_orientation_rpy()
             base_rot_matrix = geom.rpy_to_matrix(
                 roll=base_orientation[0],
@@ -81,17 +79,23 @@ class Champ:
      
             foot_positions_from_base = quadruped.feet.position
             foot_positions_from_hip = quadruped.transform_to_hip(foot_positions_from_base)
-            
-            linear, angular = sensors.base_velocity()
-            l_vx, l_vy, l_vz = linear
-            a_vx, a_vy, a_vz = angular
-
-            world_x, world_y, world_z = sensors.base_position()
 
             contact_states = sensors.contact_states()
 
-            p.setJointMotorControlArray(base_id, sensors.actuator_ids, p.POSITION_CONTROL, list(target_joint_positions))
+            quadruped.joint_positions = sensors.joint_positions()
 
+            world_x, world_y, world_z = sensors.base_position()
+            quadruped.pose.position = sensors.base_position()
+
+            quadruped.pose.orientation = sensors.base_orientation_quat()
+
+            linear, angular = sensors.base_velocity()
+            quadruped.velocity.linear = linear
+            quadruped.velocity.angular = angular
+
+            print(quadruped.pose.orientation)
+
+            p.setJointMotorControlArray(base_id, sensors.actuator_ids, p.POSITION_CONTROL, list(target_joint_positions))
         p.disconnect()
 
 if __name__ == '__main__':

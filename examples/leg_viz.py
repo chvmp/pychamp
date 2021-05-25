@@ -2,7 +2,7 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-from champ.types import Pose, Velocities
+from champ.types import Pose, Twist
 from champ.base import Base
 from champ.controllers.cheetah_one import CheetahOne
 from champ.kinematics import Kinematics
@@ -51,7 +51,7 @@ leg_viz = LegVisualizer(quadruped)
 req_pose = Pose()
 req_pose.position.z = custom_profile.nominal_height
 
-req_vel = Velocities()
+req_vel = Twist()
 req_vel.linear.x = 1.0
 
 average_duration = 0
