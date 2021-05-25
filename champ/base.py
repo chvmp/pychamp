@@ -1,6 +1,7 @@
 import copy
 import math
 import numpy as np
+from champ.types import TwistVector, PoseVector
 from champ.leg import Leg
 from champ.joint import Joint
 from champ.geometry import translate, translate_x, translate_y, translate_z, rotate_x
@@ -25,6 +26,9 @@ class Base(object):
         self._mass = 0.0
         self._moment_of_inertia = np.zeros((3,3))
         self._dimensions = (0, 0, 0)
+        self._position = np.zeros((3,1))
+        self.velocity = TwistVector()
+        self.pose = PoseVector()
 
         if robot_profile is not None:
             if len(robot_profile.link_names) > 0 and len(robot_profile.urdf) > 0:
@@ -35,6 +39,7 @@ class Base(object):
 
     def init(self):
         self.legs.zero_stances
+
 
     @property
     def joint_positions(self):
