@@ -46,14 +46,14 @@ class PyBulletSensors(object):
 
     def contact_states(self):
         contact_info = p.getContactPoints(self._base_id, self._plane_id)
-        foot_contacts = np.zeros(([4,1]))
+        foot_contacts = [0] * 4
 
         for single_contact in contact_info:
             link_id = single_contact[3]
             if link_id in self._foot_ids:
-                foot_contacts[self._foot_ids.index(link_id), :] = 1
+                foot_contacts[self._foot_ids.index(link_id)] = 1
         
-        return foot_contacts
+        return tuple(foot_contacts)
 
     def base_velocity(self):
         return p.getBaseVelocity(self._base_id) #tuple(tuple(linear), tuple(angular))
