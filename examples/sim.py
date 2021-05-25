@@ -80,20 +80,17 @@ class Champ:
             foot_positions_from_base = quadruped.feet.position
             foot_positions_from_hip = quadruped.transform_to_hip(foot_positions_from_base)
 
-            contact_states = sensors.contact_states()
-
             quadruped.joint_positions = sensors.joint_positions()
 
             world_x, world_y, world_z = sensors.base_position()
             quadruped.pose.position = sensors.base_position()
 
             quadruped.pose.orientation = sensors.base_orientation_quat()
+            quadruped.legs.contact_state = sensors.contact_states()
 
             linear, angular = sensors.base_velocity()
             quadruped.velocity.linear = linear
             quadruped.velocity.angular = angular
-
-            print(quadruped.pose.orientation)
 
             p.setJointMotorControlArray(base_id, sensors.actuator_ids, p.POSITION_CONTROL, list(target_joint_positions))
         p.disconnect()
