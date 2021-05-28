@@ -1,7 +1,7 @@
 import pybullet as p
 import numpy as np
 
-class PyBulletSensors(object):
+class FakeHardware(object):
     def __init__(self, plane_id, base_id, joint_names, link_names):
         self._base_id = base_id
         self._plane_id = plane_id
@@ -40,11 +40,11 @@ class PyBulletSensors(object):
     def foot_ids(self):
        return self._foot_ids
 
-    def joint_states(self):
+    def get_joint_states(self):
         joint_states = p.getJointStates(self._base_id, self._actuator_ids)
         return [joint_info[0] for joint_info in joint_states], [joint_info[1] for joint_info in joint_states]
 
-    def contact_states(self):
+    def get_contact_states(self):
         contact_info = p.getContactPoints(self._base_id, self._plane_id)
         foot_contacts = [0] * 4
 
@@ -55,15 +55,15 @@ class PyBulletSensors(object):
         
         return tuple(foot_contacts)
 
-    def base_velocity(self):
+    def get_base_velocity(self):
         return p.getBaseVelocity(self._base_id) #tuple(tuple(linear), tuple(angular))
 
-    def base_position(self):
+    def get_base_position(self):
         return p.getBasePositionAndOrientation(self._base_id)[0] #tuple(x,y,z)
 
-    def base_orientation_rpy(self):
+    def get_base_rpy(self):
         quat = p.getBasePositionAndOrientation(self._base_id)[1]
         return p.getEulerFromQuaternion(quat) #tuple(roll, pitch, yaw)
 
-    def base_orientation_quat(self):
+    def get_base_quat(self):
         return p.getBasePositionAndOrientation(self._base_id)[1] #tuple(x, y, z, w)
