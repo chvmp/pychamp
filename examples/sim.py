@@ -86,6 +86,7 @@ class Champ:
             quadruped.pose.position = sensors.base_position()
 
             quadruped.pose.orientation = sensors.base_orientation_quat()
+            quadruped.pose.rpy = sensors.base_orientation_rpy()
             quadruped.legs.contact_state = sensors.contact_states()
 
             linear, angular = sensors.base_velocity()

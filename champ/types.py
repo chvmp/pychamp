@@ -52,8 +52,19 @@ class Twist:
 class PoseVector:
     def __init__(self):
         self._position = np.zeros(3)
+        self._rpy = np.zeros(3)
         self._orientation = np.zeros(4)
         self._orientation[3] = 1.0
+        
+    @property
+    def rpy(self):
+        return self._rpy
+
+    @rpy.setter
+    def rpy(self, rpy):
+        self._rpy[0] = rpy[0]
+        self._rpy[1] = rpy[1]
+        self._rpy[2] = rpy[2]
 
     @property
     def position(self):
