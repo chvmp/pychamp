@@ -59,7 +59,7 @@ for i in range(iterations):
     start = time.time()
     foot_positions = controller.walk(req_pose, req_vel)
     joint_positions = ik.inverse(foot_positions)
-    quadruped.joint_positions = joint_positions
+    quadruped.legs.joint_states = (joint_positions, joint_positions)
 
     current_duration = time.time() - start
     average_duration += current_duration

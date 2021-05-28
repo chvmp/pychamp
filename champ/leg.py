@@ -16,7 +16,10 @@ class Leg(object):
         self._center_to_nominal = 0.0
         self._center_to_nominal_calculated = False
 
-        self._contact_state = np.zeros((4,1))
+        self._contact_states = np.zeros((4,1))
+
+        self._joints_position = np.zeros(12)
+        self._joints_velocity = np.zeros(12)
 
     @property
     def zero_stances(self):
@@ -44,7 +47,7 @@ class Leg(object):
 
     @property
     def jacobian(self):
-        q = self._parent.joint_positions.reshape(4,3)
+        q = self._joints_position.reshape((4,3))
 
         jacobian = np.zeros((4,3,3))
         sin_lu = np.sin(q[:, 2] + q[:, 1])
@@ -102,13 +105,31 @@ class Leg(object):
         return jacobian  
 
     @property
-    def contact_state(self):
-        return self._contact_state
+    def contact_states(self):
+        return self._contact_states
 
-    @contact_state.setter
-    def contact_state(self, contact_state):
-        self._contact_state[0, 0] = contact_state[0]
-        self._contact_state[1, 0] = contact_state[1]
-        self._contact_state[2, 0] = contact_state[2]
-        self._contact_state[3, 0] = contact_state[3]
+    @contact_states.setter
+    def contact_states(self, contact_states):
+        self._contact_states[0, 0] = contact_states[0]
+        self._contact_states[1, 0] = contact_states[1]
+        self._contact_states[2, 0] = contact_states[2]
+        self._contact_states[3, 0] = contact_states[3]
 
+    @property
+    def joint_states(self):
+        return self._joints_position, self._joints_velocity
+
+    @joint_states.setter
+    def joint_states(self, joint_states):
+        joint_positions, joints_velocity = joint_states
+        if joint_positions is not None:
+            self._joints_position = np.array(joint_positions)
+            self._parent.hips.theta = self._joints_position[0::3, np.newaxis]
+            self._parent.upper_legs.theta = self._joints_position[1::3, np.newaxis]
+            self._parent.lower_legs.theta = self._joints_position[2::3, np.newaxis]
+
+        if joints_velocity is not None:
+            self._joints_velocity = np.array(joints_velocity)
+            self._parent.hips.velocity = self._joints_velocity[0::3, np.newaxis]
+            self._parent.upper_legs.velocity = self._joints_velocity[1::3, np.newaxis]
+            self._parent.lower_legs.velocity = self._joints_velocity[2::3, np.newaxis]

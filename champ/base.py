@@ -22,7 +22,6 @@ class Base(object):
                        self.lower_legs,
                        self.feet]
 
-        self._joint_positions = np.zeros(12)
         self._mass = 0.0
         self._moment_of_inertia = np.zeros((3,3))
         self._dimensions = (0, 0, 0)
@@ -39,18 +38,6 @@ class Base(object):
 
     def init(self):
         self.legs.zero_stances
-
-
-    @property
-    def joint_positions(self):
-        return self._joint_positions
-
-    @joint_positions.setter
-    def joint_positions(self, joint_positions):
-        self._joint_positions = np.array((joint_positions))
-        self.hips.theta = self._joint_positions[0::3, np.newaxis]
-        self.upper_legs.theta = self._joint_positions[1::3, np.newaxis]
-        self.lower_legs.theta = self._joint_positions[2::3, np.newaxis]
 
     @property
     def mass(self):
