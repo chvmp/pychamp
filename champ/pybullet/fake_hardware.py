@@ -85,6 +85,11 @@ class Actuators:
         self._actuator_ids, _ = parse_info(base_id, joint_names)
         self._actuator_model = MotorModel(torque_control_enabled, kp, kd)
 
+        if torque_control_enabled:
+            friction = [0] * 12
+            p.setJointMotorControlArray(base_id, self._actuator_ids, p.VELOCITY_CONTROL, forces=list(friction))
+            p.stepSimulation()
+
     def position_control(self, joint_positions):
         p.setJointMotorControlArray(
             self._base_id, 
@@ -92,7 +97,14 @@ class Actuators:
             p.POSITION_CONTROL, 
             list(joint_positions)
         )
+        p.stepSimulation()
 
+    def torque_control(self, torques):
+        p.setJointMotorControlArray(
+            self._base_id, 
+            self._actuator_ids, 
+            p.TORQUE_CONTROL, 
+            list(torques)
+        )
+        p.stepSimulation()
 
-
-    
