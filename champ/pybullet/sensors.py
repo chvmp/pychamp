@@ -40,9 +40,9 @@ class PyBulletSensors(object):
     def foot_ids(self):
        return self._foot_ids
 
-    def joint_positions(self):
+    def joint_states(self):
         joint_states = p.getJointStates(self._base_id, self._actuator_ids)
-        return [joint_info[0] for joint_info in joint_states]
+        return [joint_info[0] for joint_info in joint_states], [joint_info[1] for joint_info in joint_states]
 
     def contact_states(self):
         contact_info = p.getContactPoints(self._base_id, self._plane_id)
