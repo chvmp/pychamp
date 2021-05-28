@@ -18,7 +18,7 @@ from champ.robots.profile import OpenDog as opendog
 from champ.robots.profile import Spot as spot
 from champ.robots.profile import SpotMicro as spotmicro
 from champ.robots.profile import StochLite as stochlite
-from champ.pybullet.fake_hardware import FakeHardware
+from champ.pybullet.fake_hardware import Sensors, Actuators
 import champ.pybullet.utils as pb_utils
 import champ.geometry as geom
 
@@ -45,7 +45,8 @@ class Champ:
         quadruped = Base(robot_profile)
         controller = CheetahOne(quadruped, robot_profile)
         ik = Kinematics(quadruped, robot_profile.knee_orientation)
-        hardware = FakeHardware(plane_id, base_id, robot_profile.joint_names, robot_profile.link_names)
+        sensors = Sensors(plane_id, base_id, robot_profile.joint_names)
+        actuators = Actuators(base_id, robot_profile.joint_names)
 
         req_pose = Pose()
         req_pose.position.z = robot_profile.nominal_height
@@ -62,7 +63,7 @@ class Champ:
             foot_positions = controller.walk(req_pose, req_vel)
             target_joint_positions = ik.inverse(foot_positions)
 
-            base_orientation = hardware.get_base_quat()
+            base_orientation = sensors.get_base_quat()
             base_rot_matrix = geom.quat_to_matrix(
                 x=base_orientation[0],
                 y=base_orientation[1],
@@ -70,7 +71,7 @@ class Champ:
                 w=base_orientation[3]
             )
 
-            base_orientation = hardware.get_base_rpy()
+            base_orientation = sensors.get_base_rpy()
             base_rot_matrix = geom.rpy_to_matrix(
                 roll=base_orientation[0],
                 pitch=base_orientation[1],
@@ -80,23 +81,24 @@ class Champ:
             foot_positions_from_base = quadruped.feet.position
             foot_positions_from_hip = quadruped.transform_to_hip(foot_positions_from_base)
 
-            joints_pos, joints_vel = hardware.get_joint_states()
+            joints_pos, joints_vel = sensors.get_joint_states()
             quadruped.legs.joint_states = (joints_pos, joints_vel)
 
-            world_x, world_y, world_z = hardware.get_base_position()
+            world_x, world_y, world_z = sensors.get_base_position()
             quadruped.pose.position = (world_x, world_y, world_z)
 
-            quadruped.pose.orientation = hardware.get_base_quat()
-            quadruped.pose.rpy = hardware.get_base_rpy()
-            quadruped.legs.contact_states = hardware.get_contact_states()
+            quadruped.pose.orientation = sensors.get_base_quat()
+            quadruped.pose.rpy = sensors.get_base_rpy()
+            quadruped.legs.contact_states = sensors.get_contact_states()
 
-            linear, angular = hardware.get_base_velocity()
+            linear, angular = sensors.get_base_velocity()
             quadruped.velocity.linear = linear
             quadruped.velocity.angular = angular
 
             j_pos, j_vel = quadruped.legs.joint_states
 
-            p.setJointMotorControlArray(base_id, hardware.actuator_ids, p.POSITION_CONTROL, list(target_joint_positions))
+            actuators.position_control(target_joint_positions)
+
         p.disconnect()
 
 if __name__ == '__main__':
