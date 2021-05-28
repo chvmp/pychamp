@@ -37,6 +37,7 @@ class Joint(object):
         self._parent = parent
         self._id = id
         self._theta = np.zeros((4,1))
+        self._velocity = np.zeros((4,1))
 
     @property 
     def position(self):
@@ -58,7 +59,13 @@ class Joint(object):
     def theta(self, theta):
         self._theta = theta
 
+    @property
+    def velocity(self):
+        return self._velocity
+
+    @velocity.setter
+    def velocity(self, velocity):
+        self._velocity = velocity
+
     def set_origin(self, leg_id, x, y, z):
         self.translation.set_translation(leg_id, x, y, z)
-
-
