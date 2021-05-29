@@ -73,15 +73,15 @@ class Actuators:
     def __init__(self, base_id, joint_names, torque_control_enabled=False, kp=1.2, kd=0):
         self._base_id = base_id
         self._actuator_ids, _ = parse_info(base_id, joint_names)
+        self.init(torque_control_enabled)
 
     def init(self, torque_control_enabled=False):
         if torque_control_enabled:
             zeros = [0] * 12
             p.setJointMotorControlArray(
-                base_id, 
+                self._base_id, 
                 self._actuator_ids, 
                 p.VELOCITY_CONTROL, 
-                targetVelocities=zeros,
                 forces=zeros
             )
             p.stepSimulation()
