@@ -86,8 +86,6 @@ class Actuators:
             )
             p.stepSimulation()
 
-            self.torque_control(zeros)
-
     def position_control(self, joint_positions):
         p.setJointMotorControlArray(
             self._base_id, 
