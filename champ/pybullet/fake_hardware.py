@@ -1,6 +1,5 @@
 import pybullet as p
 import numpy as np
-from champ.pybullet.motor import MotorModel
 
 
 def parse_info(base_id, joint_names):
@@ -37,18 +36,9 @@ class Sensors(object):
     def __init__(self, plane_id, base_id, joint_names, torque_control=False):
         self._base_id = base_id
         self._plane_id = plane_id
-        self._joint_ids = [0] * 16
 
         self._actuator_ids, self._foot_ids = parse_info(base_id, joint_names)
-
-    @property
-    def actuator_ids(self):
-        return self._actuator_ids         
         
-    @property
-    def foot_ids(self):
-       return self._foot_ids
-
     def get_joint_states(self):
         joint_states = p.getJointStates(self._base_id, self._actuator_ids)
         return [joint_info[0] for joint_info in joint_states],\
@@ -83,19 +73,27 @@ class Actuators:
     def __init__(self, base_id, joint_names, torque_control_enabled=False, kp=1.2, kd=0):
         self._base_id = base_id
         self._actuator_ids, _ = parse_info(base_id, joint_names)
-        self._actuator_model = MotorModel(torque_control_enabled, kp, kd)
 
+    def init(self, torque_control_enabled=False):
         if torque_control_enabled:
-            friction = [0] * 12
-            p.setJointMotorControlArray(base_id, self._actuator_ids, p.VELOCITY_CONTROL, forces=list(friction))
+            zeros = [0] * 12
+            p.setJointMotorControlArray(
+                base_id, 
+                self._actuator_ids, 
+                p.VELOCITY_CONTROL, 
+                targetVelocities=zeros,
+                forces=zeros
+            )
             p.stepSimulation()
+
+            self.torque_control(zeros)
 
     def position_control(self, joint_positions):
         p.setJointMotorControlArray(
             self._base_id, 
             self._actuator_ids, 
             p.POSITION_CONTROL, 
-            list(joint_positions)
+            targetPositions=list(joint_positions)
         )
         p.stepSimulation()
 
@@ -104,7 +102,7 @@ class Actuators:
             self._base_id, 
             self._actuator_ids, 
             p.TORQUE_CONTROL, 
-            list(torques)
+            forces=list(torques)
         )
         p.stepSimulation()
 
