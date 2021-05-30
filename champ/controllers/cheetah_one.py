@@ -18,12 +18,13 @@ class CheetahOne(object):
         self._stance_duration = robot_profile.stance_duration
         self._center_to_nominal = base.legs.center_to_nominal
         self._ref_foot = copy.deepcopy(base.legs.zero_stances)
-        self._ref_foot = translate_x(self._ref_foot, robot_profile.com_x_translation)
 
-        self._body_controller = BodyController(base, robot_profile.com_x_translation)
+        self._body_controller = BodyController(base)
         self._gait_generator = TDEvent(robot_profile.stance_duration)
         self._swing_trajectory = BezierCurve(robot_profile.swing_height)
         self._stance_trajectory = HalfSine(robot_profile.stance_depth)
+        self._prev_foot_positions = np.zeros((4, 3))
+        self._controller_started = False
    
     def walk(self, req_pose, req_vel, now=None):
         if now is None:
@@ -31,6 +32,10 @@ class CheetahOne(object):
             
         #create reference foot positions based on required pose 
         foot_positions = self._body_controller.pose_command(req_pose)
+
+        if not self._controller_started:
+            self._controller_started = True
+            self._prev_foot_positions = foot_positions
 
         #constrain velocities to user defined min/max vels
         req_vel.linear.x = clip(req_vel.linear.x, -self._max_linear_x, self._max_linear_x)
@@ -89,5 +94,13 @@ class CheetahOne(object):
             ),
             foot_positions
         )
+
+        foot_positions = np.where(
+            (swing == 0.0) & (stance == 0.0),
+            self._prev_foot_positions,
+            foot_positions
+        )
+
+        self._prev_foot_positions = copy.deepcopy(foot_positions)
 
         return foot_positions
