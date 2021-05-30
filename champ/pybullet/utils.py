@@ -17,12 +17,12 @@ def get_req_vel(id, req_vel, max_linear_x=0.5, max_linear_y=0.5, max_angular_z=1
     controlling_view = False
     for k,v in keys.items():
         if (k == p.B3G_RIGHT_ARROW and (v&p.KEY_IS_DOWN)):
-            req_vel.angular.z -= 0.05
+            req_vel.angular.z -= 1.0
         if (k == p.B3G_RIGHT_ARROW and (v&p.KEY_WAS_RELEASED)):
             req_vel.angular.z = 0.0
 
         if (k == p.B3G_LEFT_ARROW and (v&p.KEY_IS_DOWN)):
-            req_vel.angular.z += 0.05
+            req_vel.angular.z += 1.0
         if (k == p.B3G_LEFT_ARROW and (v&p.KEY_WAS_RELEASED)):
             req_vel.angular.z = 0.0
 
