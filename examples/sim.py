@@ -54,9 +54,6 @@ class Champ:
 
         pb_utils.print_teleop_instructions()
 
-        for i in range(p.getNumJoints(base_id)):
-            joint_info = p.getJointInfo(base_id, i)
-
         while True:
             req_vel = pb_utils.get_req_vel(base_id, req_vel)
        
