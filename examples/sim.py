@@ -31,7 +31,6 @@ class Champ:
         robot_profile = open_quadruped
 
         physics_client = p.connect(p.GUI)
-        p.setRealTimeSimulation(True)
         p.configureDebugVisualizer(p.COV_ENABLE_SHADOWS, 0)
         p.setGravity(0, 0, -9.8)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
